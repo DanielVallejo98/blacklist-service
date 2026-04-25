@@ -1,0 +1,48 @@
+version: 0.2
+
+env:
+  variables:
+    PYTHONDONTWRITEBYTECODE: "1"
+    PYTHONUNBUFFERED: "1"
+  parameter-store:
+    STATIC_TOKEN: "/blacklist-api/STATIC_TOKEN"
+    JWT_SECRET_KEY: "/blacklist-api/JWT_SECRET_KEY"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - echo "=== Installing dependencies ==="
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+      - pip install pytest pytest-mock coverage
+
+  pre_build:
+    commands:
+      - echo "=== Running unit tests ==="
+      - python -m pytest tests/ -v --tb=short
+      - echo "=== Generating coverage report ==="
+      - coverage run -m pytest tests/
+      - coverage report --fail-under=70
+      - echo "=== Logging into ECR ==="
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+
+  build:
+    commands:
+      - echo "=== Building Docker image ==="
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - docker build -t $ECR_REPO_URI:$IMAGE_TAG -t $ECR_REPO_URI:latest .
+      - echo "=== Pushing Docker image to ECR ==="
+      - docker push $ECR_REPO_URI:$IMAGE_TAG
+      - docker push $ECR_REPO_URI:latest
+      - echo "Image pushed: $ECR_REPO_URI:$IMAGE_TAG"
+
+  post_build:
+    commands:
+      - echo "=== Build completed on $(date) ==="
+      - printf '[{"name":"blacklist-api","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
