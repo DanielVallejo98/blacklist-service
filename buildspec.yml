@@ -25,11 +25,11 @@ phases:
       - echo "=== Generating coverage report ==="
       - coverage run -m pytest tests/
       - coverage report --fail-under=70
-      - echo "=== Logging into ECR ==="
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - echo "ECR login successful"
+
   build:
     commands:
+      - echo "=== Logging into ECR ==="
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo "=== Building Docker image ==="
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - "docker build -t $ECR_REPO_URI:$IMAGE_TAG -t $ECR_REPO_URI:latest ."
