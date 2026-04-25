@@ -32,11 +32,11 @@ phases:
     commands:
       - echo "=== Building Docker image ==="
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - docker build -t $ECR_REPO_URI:$IMAGE_TAG -t $ECR_REPO_URI:latest .
+      - "docker build -t $ECR_REPO_URI:$IMAGE_TAG -t $ECR_REPO_URI:latest ."
       - echo "=== Pushing Docker image to ECR ==="
-      - docker push $ECR_REPO_URI:$IMAGE_TAG
-      - docker push $ECR_REPO_URI:latest
-      - echo "Image pushed: $ECR_REPO_URI:$IMAGE_TAG"
+      - "docker push $ECR_REPO_URI:$IMAGE_TAG"
+      - "docker push $ECR_REPO_URI:latest"
+      - echo "Image pushed $ECR_REPO_URI:$IMAGE_TAG"
 
   post_build:
     commands:
