@@ -24,7 +24,7 @@ class TestHealthEndpoint:
             response = client.get("/health")
 
         # Verificamos que el código de respuesta sea 200 (OK)
-        assert response.status_code == 999
+        assert response.status_code == 200
 
         # Convertimos el JSON de la respuesta a un diccionario Python
         data = response.get_json()
