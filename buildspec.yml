@@ -41,7 +41,7 @@ phases:
   post_build:
     commands:
       - echo "=== Build completed on $(date) ==="
-      - printf '[{"name":"blacklist-api","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"email-app","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:
