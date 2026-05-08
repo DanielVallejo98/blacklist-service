@@ -23,8 +23,8 @@ class TestHealthEndpoint:
             # Este cliente no necesita que el servidor esté corriendo
             response = client.get("/health")
 
-        # Verificamos que el código de respuesta sea 200 (OK)
-        assert response.status_code == 200
+        # Verificamos que el código de respuesta sea 200 (OK
+        assert response.status_code == 900
 
         # Convertimos el JSON de la respuesta a un diccionario Python
         data = response.get_json()
