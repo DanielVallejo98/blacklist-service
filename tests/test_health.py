@@ -12,7 +12,7 @@ class TestHealthEndpoint:
         ENTONCES la respuesta debe ser 200 con status=healthy
         """
         # patch intercepta el objeto 'db' dentro de health_routes.py
-        # y lo reemplaza por un objeto falso llamado mock_d
+        # y lo reemplaza por un objeto falso llamado mock_db
         with patch("routes.health_routes.db") as mock_db:
 
             # Le decimos al mock: cuando alguien llame a db.session.execute(),
