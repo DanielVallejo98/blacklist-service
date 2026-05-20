@@ -38,7 +38,8 @@ services:
       DB_NAME:        blacklist_db
       JWT_SECRET_KEY: super-secret-key-change-in-prod
       STATIC_TOKEN:   my-static-bearer-token
-      NEW_RELIC_CONFIG_FILE: newrelic.ini
+      NEW_RELIC_CONFIG_FILE: newrelic-local.ini
+      NEW_RELIC_APP_NAME: blacklist-api
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
