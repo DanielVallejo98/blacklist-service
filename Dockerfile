@@ -2,7 +2,8 @@ FROM public.ecr.aws/docker/library/python:3.8-slim
  
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app
+    PYTHONPATH=/app \
+    NEW_RELIC_CONFIG_FILE=newrelic.ini
  
 WORKDIR /app
  
@@ -16,5 +17,6 @@ COPY . .
  
 EXPOSE 5000
  
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "app:app"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "app:app"]
+CMD ["newrelic-admin", "run-program", "gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "app:app"]
  
